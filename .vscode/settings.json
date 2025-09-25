@@ -1,0 +1,16 @@
+{
+    "cSpell.words": [
+        "coverprofile",
+        "devel",
+        "dylib",
+        "maildev",
+        "minioadmin",
+        "oneline",
+        "smtogo",
+        "STARTTLS",
+        "vars"
+    ],
+    "markdownlint.config": {
+        "first-line-h1": false
+    }
+}
