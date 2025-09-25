@@ -1,16 +1,19 @@
 name: Build and publish Docker image
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - develop
-  #   paths:
-  #     - '.github/workflows/docker-image.yml'
-  #     - 'src/docker/Dockerfile'
-  #     - 'src/app/requirements.txt'
-  #     - 'src/app/**.py'
-  #     - 'src/app/**/*.py'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '.github/workflows/docker-image.yml'
+      - 'src/docker/Dockerfile'
+      - 'src/app/go.mod'
+      - 'src/app/go.sum'
+      - 'src/app/**/go.mod'
+      - 'src/app/**/go.sum'
+      - 'src/app/**.go'
+      - 'src/app/**/*.go'
   workflow_dispatch:
 
 permissions:
