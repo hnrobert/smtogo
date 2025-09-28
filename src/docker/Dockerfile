@@ -31,7 +31,7 @@ WORKDIR /app
 COPY --from=builder /app/smtogo .
 
 # Create data directory with proper permissions
-RUN mkdir -p data && chown -R smtogo:smtogo /app
+# RUN mkdir -p data && chown -R smtogo:smtogo /app
 
 # Switch to non-root user
 # USER smtogo
