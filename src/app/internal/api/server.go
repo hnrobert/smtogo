@@ -148,27 +148,6 @@ func (s *Server) getOpenAPISpec(c *gin.Context) {
 					},
 				},
 			},
-			"/v1/mail/send-with-attachments": map[string]interface{}{
-				"post": map[string]interface{}{
-					"summary":     "Send email with attachments",
-					"description": "Send an email with file attachments",
-					"requestBody": map[string]interface{}{
-						"required": true,
-						"content": map[string]interface{}{
-							"multipart/form-data": map[string]interface{}{
-								"schema": map[string]interface{}{
-									"$ref": "#/components/schemas/EmailWithAttachmentsRequest",
-								},
-							},
-						},
-					},
-					"responses": map[string]interface{}{
-						"200": map[string]interface{}{
-							"description": "Email queued successfully",
-						},
-					},
-				},
-			},
 		},
 		"components": map[string]interface{}{
 			"schemas": map[string]interface{}{
@@ -199,44 +178,6 @@ func (s *Server) getOpenAPISpec(c *gin.Context) {
 							"type":        "boolean",
 							"default":     false,
 							"description": "Enable debug mode",
-						},
-					},
-				},
-				"EmailWithAttachmentsRequest": map[string]interface{}{
-					"type":     "object",
-					"required": []string{"recipient_email", "subject", "body"},
-					"properties": map[string]interface{}{
-						"recipient_email": map[string]interface{}{
-							"type":        "string",
-							"format":      "email",
-							"description": "Recipient email address",
-						},
-						"subject": map[string]interface{}{
-							"type":        "string",
-							"description": "Email subject",
-						},
-						"body": map[string]interface{}{
-							"type":        "string",
-							"description": "Email body content",
-						},
-						"body_type": map[string]interface{}{
-							"type":        "string",
-							"enum":        []string{"plain", "html"},
-							"default":     "plain",
-							"description": "Email body type",
-						},
-						"debug": map[string]interface{}{
-							"type":        "boolean",
-							"default":     false,
-							"description": "Enable debug mode",
-						},
-						"attachments": map[string]interface{}{
-							"type": "array",
-							"items": map[string]interface{}{
-								"type":   "string",
-								"format": "binary",
-							},
-							"description": "File attachments (max 2 files, 2MB each)",
 						},
 					},
 				},

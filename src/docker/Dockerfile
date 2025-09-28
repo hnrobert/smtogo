@@ -30,8 +30,8 @@ WORKDIR /app
 # Copy binary from builder
 COPY --from=builder /app/smtogo .
 
-# Create data directory
-RUN mkdir -p data && chown -R smtogo:smtogo /app
+# Create data directory with proper permissions
+RUN mkdir -p data && chown -R smtogo:smtogo /app && chmod -R 755 /app
 
 # Switch to non-root user
 USER smtogo
