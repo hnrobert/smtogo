@@ -31,7 +31,21 @@ func (s *Sender) SendEmail(req *models.EmailRequest, emailID, clientIP string, h
 	m := gomail.NewMessage()
 
 	// Set headers
-	m.SetHeader("From", s.config.GetDisplayEmail())
+	// Fix 553 error by ensuring envelope sender matches SMTP auth user
+	// This matches the behavior of Python's smtplib
+	if s.config.UsePassword {
+		// When using SMTP authentication, envelope sender must match auth user
+		displayEmail := s.config.GetDisplayEmail()
+		if displayEmail != s.config.SenderEmail {
+			// Use SetAddressHeader to set envelope sender to auth email but display custom name
+			m.SetAddressHeader("From", s.config.SenderEmail, displayEmail)
+		} else {
+			m.SetHeader("From", s.config.SenderEmail)
+		}
+	} else {
+		// For unauthenticated SMTP (like maildev), use display email
+		m.SetHeader("From", s.config.GetDisplayEmail())
+	}
 	m.SetHeader("To", req.RecipientEmail)
 	m.SetHeader("Subject", req.Subject)
 	m.SetHeader("Message-ID", fmt.Sprintf("<%s@%s>", emailID, s.config.SenderDomain))
