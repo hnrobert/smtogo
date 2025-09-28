@@ -1,9 +1,10 @@
 services:
   # SMTP API Application
   smtogo:
-    build:
-      context: src/
-      dockerfile: docker/Dockerfile
+    image: ghcr.io/hnrobert/smtogo:latest
+    # build:
+    #   context: src/
+    #   dockerfile: docker/Dockerfile
     container_name: smtogo-api
     ports:
       - "8000:8000"
