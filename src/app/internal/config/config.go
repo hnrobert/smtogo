@@ -32,13 +32,6 @@ type Config struct {
 	SenderEmailDisplay string `json:"sender_email_display"`
 	SenderDomain       string `json:"sender_domain"`
 	SenderPassword     string `json:"sender_password"`
-
-	// MinIO Object Storage Settings
-	MinIOEndpoint  string `json:"minio_endpoint"`
-	MinIOAccessKey string `json:"minio_access_key"`
-	MinIOSecretKey string `json:"minio_secret_key"`
-	MinioBucket    string `json:"minio_bucket"`
-	MinIOUseSSL    bool   `json:"minio_use_ssl"`
 }
 
 // Load reads configuration from file
@@ -93,9 +86,6 @@ func (c *Config) setDefaults() {
 	}
 	if c.MaxLenBody == 0 {
 		c.MaxLenBody = 50000
-	}
-	if c.MinioBucket == "" {
-		c.MinioBucket = "email-attachments"
 	}
 }
 

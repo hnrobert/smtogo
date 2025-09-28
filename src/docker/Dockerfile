@@ -14,7 +14,7 @@ COPY app/go.mod app/go.sum ./
 RUN go mod download
 
 # Copy source code
-COPY . .
+COPY app/ .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o smtogo ./cmd/smtogo

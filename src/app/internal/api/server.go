@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"smtogo/internal/config"
 	"smtogo/internal/email"
-	"smtogo/internal/storage"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +13,6 @@ import (
 type Server struct {
 	config      *config.Config
 	emailSender *email.Sender
-	storage     *storage.MinIOClient
 	router      *gin.Engine
 }
 
@@ -23,13 +21,9 @@ func NewServer(cfg *config.Config) *Server {
 	// Initialize email sender
 	emailSender := email.NewSender(cfg)
 
-	// Initialize storage client
-	storageClient := storage.NewMinIOClient(cfg)
-
 	server := &Server{
 		config:      cfg,
 		emailSender: emailSender,
-		storage:     storageClient,
 	}
 
 	server.setupRoutes()
@@ -57,7 +51,6 @@ func (s *Server) setupRoutes() {
 				mail.Use(s.apiKeyAuthMiddleware())
 			}
 			mail.POST("/send", s.sendEmail)
-			mail.POST("/send-with-attachments", s.sendEmailWithAttachments)
 		}
 	}
 }

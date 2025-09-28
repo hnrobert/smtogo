@@ -3,29 +3,25 @@ package email
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"time"
 
 	"smtogo/internal/config"
 	"smtogo/internal/models"
-	"smtogo/internal/storage"
 
 	"gopkg.in/gomail.v2"
 )
 
 // Sender handles email sending operations
 type Sender struct {
-	config  *config.Config
-	storage *storage.MinIOClient
+	config *config.Config
 }
 
 // NewSender creates a new email sender
 func NewSender(cfg *config.Config) *Sender {
 	return &Sender{
-		config:  cfg,
-		storage: storage.NewMinIOClient(cfg),
+		config: cfg,
 	}
 }
 
@@ -47,17 +43,7 @@ func (s *Sender) SendEmail(req *models.EmailRequest, emailID, clientIP string, h
 		m.SetBody("text/plain", req.Body)
 	}
 
-	// Add attachments if any
-	if len(attachmentNames) > 0 {
-		for _, objectName := range attachmentNames {
-			if objectName != "" {
-				if err := s.addAttachment(m, objectName); err != nil {
-					s.saveEmailResult(emailID, "failure", fmt.Sprintf("Failed to add attachment: %v", err), clientIP, headers, 0)
-					return err
-				}
-			}
-		}
-	}
+	// Attachments are not supported in this version
 
 	// Calculate message length (approximate)
 	messageLength := len(req.Subject) + len(req.Body) + len(req.RecipientEmail)
@@ -100,36 +86,6 @@ func (s *Sender) sendMessage(m *gomail.Message) error {
 
 	// Send the message
 	return d.DialAndSend(m)
-}
-
-// addAttachment adds an attachment from MinIO to the email
-func (s *Sender) addAttachment(m *gomail.Message, objectName string) error {
-	// Download file from MinIO
-	reader, err := s.storage.GetFile(objectName)
-	if err != nil {
-		return fmt.Errorf("failed to get file from storage: %w", err)
-	}
-	defer reader.Close()
-
-	// Read file content
-	content, err := io.ReadAll(reader)
-	if err != nil {
-		return fmt.Errorf("failed to read file content: %w", err)
-	}
-
-	// Extract filename from object name (remove UUID prefix)
-	filename := objectName
-	if len(objectName) > 36 && objectName[36] == '_' {
-		filename = objectName[37:] // Remove UUID prefix
-	}
-
-	// Attach file to message
-	m.Attach(filename, gomail.SetCopyFunc(func(w io.Writer) error {
-		_, err := w.Write(content)
-		return err
-	}))
-
-	return nil
 }
 
 // saveEmailResult saves the email sending result to a JSON file

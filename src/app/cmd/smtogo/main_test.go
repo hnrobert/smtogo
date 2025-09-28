@@ -14,13 +14,8 @@ import (
 func TestHealthEndpoint(t *testing.T) {
 	// Create a test configuration
 	cfg := &config.Config{
-		APIName:        "Test SMTP API",
-		Port:           8000,
-		MinIOEndpoint:  "localhost:9000",
-		MinIOAccessKey: "test",
-		MinIOSecretKey: "test123",
-		MinioBucket:    "test-bucket",
-		MinIOUseSSL:    false,
+		APIName: "Test SMTP API",
+		Port:    8000,
 	}
 
 	// Create test server
@@ -50,11 +45,6 @@ func TestOpenAPIEndpoint(t *testing.T) {
 		APIName:        "Test SMTP API",
 		APIDescription: "Test description",
 		Port:           8000,
-		MinIOEndpoint:  "localhost:9000",
-		MinIOAccessKey: "test",
-		MinIOSecretKey: "test123",
-		MinioBucket:    "test-bucket",
-		MinIOUseSSL:    false,
 	}
 
 	// Create test server

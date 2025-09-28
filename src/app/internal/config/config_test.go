@@ -34,8 +34,6 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, "smtp.test.com", config.SMTPServer)
 	assert.Equal(t, 587, config.SMTPPort)
 	assert.Equal(t, "test@example.com", config.SenderEmail)
-	assert.Equal(t, "localhost:9000", config.MinIOEndpoint)
-	assert.Equal(t, "test-bucket", config.MinioBucket)
 }
 
 func TestRemoveJSONComments(t *testing.T) {
@@ -96,5 +94,4 @@ func TestSetDefaults(t *testing.T) {
 	assert.Equal(t, 64, config.MaxLenRecipientEmail)
 	assert.Equal(t, 255, config.MaxLenSubject)
 	assert.Equal(t, 50000, config.MaxLenBody)
-	assert.Equal(t, "email-attachments", config.MinioBucket)
 }
