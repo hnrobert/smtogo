@@ -8,7 +8,9 @@ on:
     paths:
       - '.github/workflows/docker-image.yml'
       - 'src/docker/Dockerfile'
-      - 'src/app/**/*.{go,mod,sum}'
+      - 'src/app/**/*.go'
+      - 'src/app/go.mod'
+      - 'src/app/go.sum'
   workflow_dispatch:
 
 permissions:
@@ -59,4 +61,5 @@ jobs:
           tags: |
             ghcr.io/${{ github.actor }}/smtogo:${{ steps.vars.outputs.TAGS }}
             ghcr.io/${{ github.actor }}/smtogo:${{ steps.vars.outputs.BRANCH }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          # platforms: linux/amd64,linux/arm64
