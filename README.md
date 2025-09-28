@@ -143,7 +143,7 @@ curl -X POST http://localhost:8000/v1/mail/send \
 
 ```mermaid
 flowchart LR
-    A[SMToGo API] --> B[SMTP Server]
+   A[YOUR_PROGRAMME] -- POST http://smtogo:8000/v1/mail/send --> B[SMToGo API] --> C[SMTP Server]
 ```
 
 ### Project Structure
@@ -226,10 +226,6 @@ The application uses pre-built Docker images from GitHub Container Registry:
      ghcr.io/hnrobert/smtogo:latest
    ```
 
-### Kubernetes Deployment
-
-See the `k8s/` directory for Kubernetes manifests.
-
 ### Production Considerations
 
 - Use strong API keys for authentication
@@ -270,17 +266,3 @@ The application exposes metrics endpoints for monitoring:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-- 📧 Email: <support@example.com>
-- 💬 Issues: [GitHub Issues](https://github.com/hnrobert/smtogo/issues)
-- 📖 Documentation: [API Docs](http://localhost:8000/docs)
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
-
----
-
-Made with ❤️ by [Your Name](https://github.com/hnrobert)
