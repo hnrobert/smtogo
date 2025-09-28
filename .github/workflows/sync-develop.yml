@@ -1,9 +1,9 @@
 name: Sync Develop Branch
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch: # 允许手动触发
 
 jobs:

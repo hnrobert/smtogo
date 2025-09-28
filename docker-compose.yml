@@ -1,0 +1,30 @@
+services:
+  # SMTP API Application
+  smtogo:
+    image: ghcr.io/hnrobert/smtogo:latest
+    # build:
+    #   context: src/
+    #   dockerfile: docker/Dockerfile
+    container_name: smtogo-api
+    ports:
+      - "8000:8000"
+    environment:
+      - GIN_MODE=release
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

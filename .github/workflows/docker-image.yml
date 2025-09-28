@@ -1,16 +1,17 @@
 name: Build and publish Docker image
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - develop
-  #   paths:
-  #     - '.github/workflows/docker-image.yml'
-  #     - 'src/docker/Dockerfile'
-  #     - 'src/app/requirements.txt'
-  #     - 'src/app/**.py'
-  #     - 'src/app/**/*.py'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '.github/workflows/docker-image.yml'
+      - 'src/docker/Dockerfile'
+      - '**/.dockerignore'
+      - 'src/app/**/*.go'
+      - 'src/app/go.mod'
+      - 'src/app/go.sum'
   workflow_dispatch:
 
 permissions:
@@ -61,4 +62,5 @@ jobs:
           tags: |
             ghcr.io/${{ github.actor }}/smtogo:${{ steps.vars.outputs.TAGS }}
             ghcr.io/${{ github.actor }}/smtogo:${{ steps.vars.outputs.BRANCH }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          # platforms: linux/amd64,linux/arm64

@@ -17,10 +17,5 @@
     "sender_email": "your_email@example.com", // SMTP authentication email (actual account)
     "sender_email_display": "", // From header display email (leave empty to use sender_email)
     "sender_domain": "devel.local.email",
-    "sender_password": "your_password",
-    // MinIO Object Storage Settings
-    "minio_server": "minio:9000", // MinIO server endpoint
-    "minio_access_key": "minioadmin", // MinIO access key
-    "minio_secret_key": "minioadmin", // MinIO secret key
-    "minio_secure": false // Use HTTPS for MinIO connection
+    "sender_password": "your_password"
 }

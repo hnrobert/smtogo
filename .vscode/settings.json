@@ -1,13 +1,24 @@
 {
     "cSpell.words": [
+        "adduser",
+        "cosmtrek",
         "coverprofile",
         "devel",
         "dylib",
+        "ehthumbs",
+        "GOARCH",
+        "golangci",
+        "GOOS",
+        "gosec",
+        "healthcheck",
         "maildev",
         "minioadmin",
         "oneline",
+        "securecodewarrior",
         "smtogo",
         "STARTTLS",
+        "stretchr",
+        "swaggo",
         "vars"
     ],
     "markdownlint.config": {
