@@ -1,16 +1,17 @@
 # SMToGo - High-Performance SMTP API Server
 
-[![Build Status](https://github.com/YOUR_USERNAME/smtogo/workflows/Build%20and%20Test%20SMToGo/badge.svg)](https://github.com/YOUR_USERNAME/smtogo/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/YOUR_USERNAME/smtogo)](https://goreportcard.com/report/github.com/YOUR_USERNAME/smtogo)
+[![Docker Build Status](https://github.com/hnrobert/smtogo/actions/workflows/Build%20and%20%publish20Docker%20image/badge.svg)](https://github.com/hnrobert/smtogo/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hnrobert/smtogo)](https://goreportcard.com/report/github.com/hnrobert/smtogo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A high-performance SMTP API server written in Go, designed for reliable email sending with attachment support via MinIO object storage.
+A high-performance SMTP API server written in Go, designed for reliable email sending.
+
+> **Note**: This version focuses on core email functionality. File attachment support has been removed to simplify deployment and reduce dependencies.
 
 ## Features
 
 - 🚀 **High Performance**: Built with Go and Gin framework for excellent performance
 - 📧 **SMTP Support**: Full SMTP configuration with SSL/TLS support
-- 📎 **File Attachments**: Seamless file attachment handling via MinIO object storage
 - 🔐 **Optional Authentication**: API key-based authentication (optional)
 - 📊 **OpenAPI Documentation**: Built-in Swagger/ReDoc documentation
 - 🐳 **Docker Ready**: Complete Docker and Docker Compose setup
@@ -26,34 +27,32 @@ A high-performance SMTP API server written in Go, designed for reliable email se
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/smtogo.git
+   git clone https://github.com/hnrobert/smtogo.git
    cd smtogo
    ```
 
 2. **Configure SMTP settings**:
 
    ```bash
-   cp smtp_config.jsonc.example smtp_config.jsonc
-   # Edit smtp_config.jsonc with your SMTP server details
+   cp config/smtp_config.jsonc.example config/smtp_config.jsonc
+   # Edit config/smtp_config.jsonc with your SMTP server details
    ```
 
-3. **Start the services**:
+3. **Start the service**:
 
    ```bash
    docker-compose up -d
    ```
 
-4. **Access the services**:
+4. **Access the service**:
    - API Server: <http://localhost:8000>
    - API Documentation: <http://localhost:8000/docs>
-   - MinIO Console: <http://localhost:9001> (admin/admin123)
 
 ### Manual Installation
 
 1. **Prerequisites**:
 
    - Go 1.21 or later
-   - MinIO server (for file attachments)
 
 2. **Install dependencies**:
 
@@ -64,7 +63,7 @@ A high-performance SMTP API server written in Go, designed for reliable email se
 3. **Configure the application**:
 
    ```bash
-   cp smtp_config.jsonc.example smtp_config.jsonc
+   cp config/smtp_config.jsonc.example config/smtp_config.jsonc
    # Edit the configuration file
    ```
 
@@ -76,7 +75,7 @@ go run cmd/smtogo/main.go
 
 ## Configuration
 
-The application uses a JSONC configuration file (`smtp_config.jsonc`) that supports comments:
+The application uses a JSONC configuration file (`config/smtp_config.jsonc`) that supports comments:
 
 ```jsonc
 {
@@ -101,14 +100,7 @@ The application uses a JSONC configuration file (`smtp_config.jsonc`) that suppo
   "sender_email": "sender@example.com",
   "sender_email_display": "Display Name <sender@example.com>",
   "sender_domain": "example.com",
-  "sender_password": "your_smtp_password",
-
-  // MinIO Object Storage Settings
-  "minio_endpoint": "localhost:9000",
-  "minio_access_key": "minioadmin",
-  "minio_secret_key": "minioadmin",
-  "minio_bucket": "email-attachments",
-  "minio_use_ssl": false
+  "sender_password": "your_smtp_password"
 }
 ```
 
@@ -121,16 +113,13 @@ You can also configure the application using environment variables:
 - `SENDER_EMAIL`: Sender email address
 - `SENDER_PASSWORD`: SMTP password
 - `API_KEY`: Optional API key for authentication
-- `MINIO_ENDPOINT`: MinIO server endpoint
-- `MINIO_ACCESS_KEY`: MinIO access key
-- `MINIO_SECRET_KEY`: MinIO secret key
 
 ## API Usage
 
-### Send Email (JSON)
+### Send Email
 
 ```bash
-curl -X POST http://localhost:8000/send \
+curl -X POST http://localhost:8000/v1/mail/send \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key" \
   -d '{
@@ -141,27 +130,12 @@ curl -X POST http://localhost:8000/send \
   }'
 ```
 
-### Send Email with Attachments (Multipart Form)
-
-```bash
-curl -X POST http://localhost:8000/send-form \
-  -H "X-API-Key: your-api-key" \
-  -F "recipient_email=recipient@example.com" \
-  -F "subject=Test with Attachment" \
-  -F "body=Email with attachment" \
-  -F "body_type=plain" \
-  -F "file1=@/path/to/attachment.pdf" \
-  -F "file2=@/path/to/image.jpg"
-```
-
 ### API Response
 
 ```json
 {
-  "success": true,
-  "message": "Email sent successfully",
-  "email_id": "123e4567-e89b-12d3-a456-426614174000",
-  "timestamp": "2024-01-15T10:30:45Z"
+  "message": "Email is being sent in the background",
+  "email_id": "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
@@ -169,26 +143,23 @@ curl -X POST http://localhost:8000/send-form \
 
 ```mermaid
 flowchart LR
-    A[Nginx Proxy<br/>(Optional)] --> B[SMToGo API]
-    B --> C[SMTP Server]
-    B --> D[MinIO Store<br/>(Attachments)]
+    A[SMToGo API] --> B[SMTP Server]
 ```
 
 ### Project Structure
 
 ```text
 smtogo/
-├── cmd/smtogo/           # Application entry point
-├── internal/
-│   ├── api/             # HTTP handlers and routing
-│   ├── config/          # Configuration management
-│   ├── email/           # Email sending logic
-│   ├── models/          # Data structures
-│   └── storage/         # MinIO client
-├── nginx/               # Nginx configuration
+├── src/app/
+│   ├── cmd/smtogo/      # Application entry point
+│   └── internal/
+│       ├── api/         # HTTP handlers and routing
+│       ├── config/      # Configuration management
+│       ├── email/       # Email sending logic
+│       └── models/      # Data structures
+├── src/docker/          # Docker configuration
 ├── .github/workflows/   # CI/CD pipelines
 ├── docker-compose.yml   # Docker orchestration
-├── Dockerfile          # Container definition
 └── README.md
 ```
 
@@ -237,17 +208,22 @@ docker build -t smtogo .
 
 ### Docker Deployment
 
-1. **Build and push image**:
+The application uses pre-built Docker images from GitHub Container Registry:
+
+1. **Deploy with docker-compose**:
 
    ```bash
-   docker build -t your-registry/smtogo:latest .
-   docker push your-registry/smtogo:latest
+   docker-compose up -d
    ```
 
-2. **Deploy with docker-compose**:
+2. **Or run directly with Docker**:
 
    ```bash
-   docker-compose -f docker-compose.prod.yml up -d
+   docker run -d \
+     -p 8000:8000 \
+     -v ./config:/app/config \
+     -v ./data:/app/data \
+     ghcr.io/hnrobert/smtogo:latest
    ```
 
 ### Kubernetes Deployment
@@ -259,17 +235,14 @@ See the `k8s/` directory for Kubernetes manifests.
 - Use strong API keys for authentication
 - Configure TLS/SSL for SMTP connections
 - Set up proper logging and monitoring
-- Configure rate limiting in Nginx
-- Use persistent volumes for MinIO data
 - Set up backup strategies for email logs
-- Monitor disk space for attachment storage
+- Configure reverse proxy for production deployment
 
 ## Monitoring
 
 ### Health Checks
 
 - `GET /health`: Basic health check
-- `GET /ready`: Readiness check (includes dependencies)
 
 ### Metrics
 
@@ -277,15 +250,12 @@ The application exposes metrics endpoints for monitoring:
 
 - Request/response times
 - Email sending success/failure rates
-- Storage usage statistics
 - SMTP connection health
 
 ## Security
 
 - Optional API key authentication
-- Request rate limiting
 - Input validation and sanitization
-- Secure file upload handling
 - SMTP credential protection
 - Container security best practices
 
@@ -304,7 +274,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - 📧 Email: <support@example.com>
-- 💬 Issues: [GitHub Issues](https://github.com/YOUR_USERNAME/smtogo/issues)
+- 💬 Issues: [GitHub Issues](https://github.com/hnrobert/smtogo/issues)
 - 📖 Documentation: [API Docs](http://localhost:8000/docs)
 
 ## Changelog
@@ -313,4 +283,4 @@ See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
 
 ---
 
-Made with ❤️ by [Your Name](https://github.com/YOUR_USERNAME)
+Made with ❤️ by [Your Name](https://github.com/hnrobert)
