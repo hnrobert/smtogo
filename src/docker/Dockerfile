@@ -8,7 +8,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Copy go mod files
-COPY go.mod go.sum ./
+COPY app/go.mod app/go.sum ./
 
 # Download dependencies
 RUN go mod download
@@ -21,9 +21,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o smtogo ./cmd/smtogo
 
 # Final stage
 FROM alpine:latest
-
-# Install ca-certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates tzdata
 
 # Create non-root user
 RUN adduser -D -s /bin/sh smtogo
