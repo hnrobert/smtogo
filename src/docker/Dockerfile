@@ -23,7 +23,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o smtogo ./cmd/smtogo
 FROM alpine:latest
 
 # Create non-root user
-RUN adduser -D -s /bin/sh smtogo
+# RUN adduser -D -s /bin/sh smtogo
 
 WORKDIR /app
 
@@ -31,10 +31,10 @@ WORKDIR /app
 COPY --from=builder /app/smtogo .
 
 # Create data directory with proper permissions
-RUN mkdir -p data && chown -R smtogo:smtogo /app && chmod -R 755 /app
+RUN mkdir -p data && chown -R smtogo:smtogo /app
 
 # Switch to non-root user
-USER smtogo
+# USER smtogo
 
 # Expose port
 EXPOSE 8000
