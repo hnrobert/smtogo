@@ -12,7 +12,7 @@ A high-performance SMTP API server written in Go, designed for reliable email se
 - 🚀 **High Performance**: Built with Go and Gin framework for excellent performance
 - 📧 **SMTP Support**: Full SMTP configuration with SSL/TLS support
 - 🔐 **Optional Authentication**: API key-based authentication (optional)
-- 📊 **OpenAPI Documentation**: Built-in Swagger/ReDoc documentation
+- 📊 **OpenAPI Documentation**: Built-in Swagger documentation
 - 🐳 **Docker Ready**: Complete Docker and Docker Compose setup
 - 🔄 **CI/CD**: GitHub Actions workflow for testing and deployment
 - 📝 **JSONC Configuration**: Support for JSON with comments configuration files
