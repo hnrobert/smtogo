@@ -165,6 +165,42 @@ smtogo/
 
 ## Development
 
+### Generating API Documentation
+
+The project uses [swaggo](https://github.com/swaggo/swag) to automatically generate Swagger/OpenAPI documentation from Go annotations.
+
+#### Manual Generation
+
+```bash
+# Install swag tool
+go install github.com/swaggo/swag/cmd/swag@latest
+
+# Generate documentation (run from /src/app directory)
+cd src/app
+swag init -g cmd/smtogo/main.go -o docs
+```
+
+#### Automatic Generation in Docker
+
+The Dockerfile automatically generates the documentation during the build process:
+
+```dockerfile
+# Install swag tool for generating Swagger documentation
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+# Generate Swagger documentation
+RUN swag init -g cmd/smtogo/main.go -o docs
+```
+
+#### Accessing Documentation
+
+Once the application is running, you can access the API documentation at:
+
+- **Root Path**: `http://localhost:8000/` (redirects to Swagger UI)
+- **Swagger UI**: `http://localhost:8000/swagger/index.html`
+- **Alternative Path**: `http://localhost:8000/docs` (redirects to Swagger UI)
+- **JSON Specification**: `http://localhost:8000/swagger/doc.json`
+
 ### Running Tests
 
 ```bash

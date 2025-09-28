@@ -61,3 +61,5 @@ docs/swagger.yaml
 
 # Air (hot reload tool) config
 .air.toml
+
+src/app/docs

@@ -3,4 +3,5 @@
 data
 
 # Exclude runtime config to mount at runtime instead
-src/app/smtp_config.jsonc
+src/app/config
+src/app/docs

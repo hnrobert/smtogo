@@ -12,6 +12,17 @@ import (
 )
 
 // sendEmail handles the JSON email sending endpoint
+// @Summary Send an email
+// @Description Send an email via SMTP
+// @Tags email
+// @Accept json
+// @Produce json
+// @Param request body models.EmailRequest true "Email request"
+// @Success 200 {object} models.EmailResponse "Email sent successfully"
+// @Failure 400 {object} models.ErrorResponse "Bad request"
+// @Failure 500 {object} models.ErrorResponse "Internal server error"
+// @Security ApiKeyAuth
+// @Router /v1/mail/send [post]
 func (s *Server) sendEmail(c *gin.Context) {
 	var req models.EmailRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

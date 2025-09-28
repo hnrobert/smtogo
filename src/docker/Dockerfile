@@ -1,7 +1,7 @@
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
-# Install git for fetching dependencies
+# Install git and build tools for fetching dependencies and generating docs
 RUN apk add --no-cache git
 
 # Set working directory
@@ -13,8 +13,14 @@ COPY app/go.mod app/go.sum ./
 # Download dependencies
 RUN go mod download
 
+# Install swag tool for generating Swagger documentation
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
 # Copy source code
 COPY app/ .
+
+# Generate Swagger documentation
+RUN swag init -g cmd/smtogo/main.go -o docs
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o smtogo ./cmd/smtogo

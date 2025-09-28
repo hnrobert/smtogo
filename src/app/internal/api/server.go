@@ -7,6 +7,8 @@ import (
 	"smtogo/internal/email"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // Server represents the API server
@@ -37,10 +39,14 @@ func (s *Server) setupRoutes() {
 	// Health check endpoint
 	s.router.GET("/health", s.getHealth)
 
-	// API documentation endpoints
-	s.router.GET("/docs", s.getDocumentation)
-	s.router.GET("/redoc", s.getRedocDocumentation)
-	s.router.GET("/openapi.json", s.getOpenAPISpec)
+	// Swagger documentation endpoints - mounted at root
+	s.router.GET("/", func(c *gin.Context) {
+		c.Redirect(302, "/swagger/index.html")
+	})
+	s.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	s.router.GET("/docs", func(c *gin.Context) {
+		c.Redirect(302, "/swagger/index.html")
+	})
 
 	// Email endpoints
 	v1 := s.router.Group("/v1")
@@ -83,209 +89,16 @@ func (s *Server) apiKeyAuthMiddleware() gin.HandlerFunc {
 }
 
 // getHealth handles health check requests
+// @Summary Health Check
+// @Description Check API health status
+// @Tags health
+// @Produce json
+// @Success 200 {object} models.HealthResponse "API is healthy"
+// @Router /health [get]
 func (s *Server) getHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":    "healthy",
 		"timestamp": c.Request.Header.Get("X-Request-Time"),
 		"version":   "1.0.0",
 	})
-}
-
-// getDocumentation serves the Swagger UI documentation
-func (s *Server) getDocumentation(c *gin.Context) {
-	html := `<!DOCTYPE html>
-<html>
-<head>
-    <title>` + s.config.APIName + ` - Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3.52.5/swagger-ui.css" />
-</head>
-<body>
-    <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@3.52.5/swagger-ui-bundle.js"></script>
-    <script>
-        SwaggerUIBundle({
-            url: '/openapi.json',
-            dom_id: '#swagger-ui',
-            presets: [
-                SwaggerUIBundle.presets.apis,
-                SwaggerUIBundle.presets.standalone
-            ]
-        });
-    </script>
-</body>
-</html>`
-	c.Data(http.StatusOK, "text/html", []byte(html))
-}
-
-// getRedocDocumentation serves the ReDoc documentation
-func (s *Server) getRedocDocumentation(c *gin.Context) {
-	html := `<!DOCTYPE html>
-<html>
-<head>
-    <title>` + s.config.APIName + ` - ReDoc</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
-    <style>
-        body { margin: 0; padding: 0; }
-    </style>
-</head>
-<body>
-    <redoc spec-url='/openapi.json'></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0/bundles/redoc.standalone.js"></script>
-</body>
-</html>`
-	c.Data(http.StatusOK, "text/html", []byte(html))
-}
-
-// getOpenAPISpec returns the OpenAPI specification
-func (s *Server) getOpenAPISpec(c *gin.Context) {
-	spec := map[string]interface{}{
-		"openapi": "3.0.0",
-		"info": map[string]interface{}{
-			"title":       s.config.APIName,
-			"description": s.config.APIDescription,
-			"version":     "1.0.0",
-		},
-		"paths": map[string]interface{}{
-			"/v1/mail/send": map[string]interface{}{
-				"post": map[string]interface{}{
-					"summary":     "Send email",
-					"description": "Send an email without attachments",
-					"requestBody": map[string]interface{}{
-						"required": true,
-						"content": map[string]interface{}{
-							"application/json": map[string]interface{}{
-								"schema": map[string]interface{}{
-									"$ref": "#/components/schemas/EmailRequest",
-								},
-							},
-						},
-					},
-					"responses": map[string]interface{}{
-						"200": map[string]interface{}{
-							"description": "Email queued successfully",
-						},
-					},
-				},
-			},
-			"/v1/mail/send-with-attachments": map[string]interface{}{
-				"post": map[string]interface{}{
-					"summary":     "Send email with attachments",
-					"description": "Send an email with file attachments",
-					"requestBody": map[string]interface{}{
-						"required": true,
-						"content": map[string]interface{}{
-							"multipart/form-data": map[string]interface{}{
-								"schema": map[string]interface{}{
-									"$ref": "#/components/schemas/EmailWithAttachmentsRequest",
-								},
-							},
-						},
-					},
-					"responses": map[string]interface{}{
-						"200": map[string]interface{}{
-							"description": "Email queued successfully",
-						},
-					},
-				},
-			},
-		},
-		"components": map[string]interface{}{
-			"schemas": map[string]interface{}{
-				"EmailRequest": map[string]interface{}{
-					"type":     "object",
-					"required": []string{"recipient_email", "subject", "body"},
-					"properties": map[string]interface{}{
-						"recipient_email": map[string]interface{}{
-							"type":        "string",
-							"format":      "email",
-							"description": "Recipient email address",
-						},
-						"subject": map[string]interface{}{
-							"type":        "string",
-							"description": "Email subject",
-						},
-						"body": map[string]interface{}{
-							"type":        "string",
-							"description": "Email body content",
-						},
-						"body_type": map[string]interface{}{
-							"type":        "string",
-							"enum":        []string{"plain", "html"},
-							"default":     "plain",
-							"description": "Email body type",
-						},
-						"debug": map[string]interface{}{
-							"type":        "boolean",
-							"default":     false,
-							"description": "Enable debug mode",
-						},
-					},
-				},
-				"EmailWithAttachmentsRequest": map[string]interface{}{
-					"type":     "object",
-					"required": []string{"recipient_email", "subject", "body"},
-					"properties": map[string]interface{}{
-						"recipient_email": map[string]interface{}{
-							"type":        "string",
-							"format":      "email",
-							"description": "Recipient email address",
-						},
-						"subject": map[string]interface{}{
-							"type":        "string",
-							"description": "Email subject",
-						},
-						"body": map[string]interface{}{
-							"type":        "string",
-							"description": "Email body content",
-						},
-						"body_type": map[string]interface{}{
-							"type":        "string",
-							"enum":        []string{"plain", "html"},
-							"default":     "plain",
-							"description": "Email body type",
-						},
-						"debug": map[string]interface{}{
-							"type":        "boolean",
-							"default":     false,
-							"description": "Enable debug mode",
-						},
-						"attachments": map[string]interface{}{
-							"type": "array",
-							"items": map[string]interface{}{
-								"type":   "string",
-								"format": "binary",
-							},
-							"description": "File attachments (max 2 files, 2MB each)",
-						},
-					},
-				},
-			},
-			"securitySchemes": func() map[string]interface{} {
-				if s.config.IsAPIKeyAuthEnabled() {
-					return map[string]interface{}{
-						"ApiKeyAuth": map[string]interface{}{
-							"type": "apiKey",
-							"in":   "header",
-							"name": "X-API-Key",
-						},
-					}
-				}
-				return map[string]interface{}{}
-			}(),
-		},
-		"security": func() []interface{} {
-			if s.config.IsAPIKeyAuthEnabled() {
-				return []interface{}{
-					map[string]interface{}{
-						"ApiKeyAuth": []interface{}{},
-					},
-				}
-			}
-			return []interface{}{}
-		}(),
-	}
-
-	c.JSON(http.StatusOK, spec)
 }
