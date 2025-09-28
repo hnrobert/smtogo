@@ -38,8 +38,8 @@ func (s *Server) setupRoutes() {
 	s.router.GET("/health", s.getHealth)
 
 	// API documentation endpoints
-	s.router.GET("/docs", s.getDocumentation)
-	s.router.GET("/redoc", s.getRedocDocumentation)
+	s.router.GET("/", s.getDocumentation)
+	// s.router.GET("/docs", s.getDocumentation)
 	s.router.GET("/openapi.json", s.getOpenAPISpec)
 
 	// Email endpoints
@@ -112,27 +112,6 @@ func (s *Server) getDocumentation(c *gin.Context) {
             ]
         });
     </script>
-</body>
-</html>`
-	c.Data(http.StatusOK, "text/html", []byte(html))
-}
-
-// getRedocDocumentation serves the ReDoc documentation
-func (s *Server) getRedocDocumentation(c *gin.Context) {
-	html := `<!DOCTYPE html>
-<html>
-<head>
-    <title>` + s.config.APIName + ` - ReDoc</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
-    <style>
-        body { margin: 0; padding: 0; }
-    </style>
-</head>
-<body>
-    <redoc spec-url='/openapi.json'></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0/bundles/redoc.standalone.js"></script>
 </body>
 </html>`
 	c.Data(http.StatusOK, "text/html", []byte(html))
