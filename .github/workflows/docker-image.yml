@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/docker-image.yml'
       - 'src/docker/Dockerfile'
+      - '**/.dockerignore'
       - 'src/app/**/*.go'
       - 'src/app/go.mod'
       - 'src/app/go.sum'
