@@ -33,9 +33,6 @@ WORKDIR /app
 # Copy binary from builder
 COPY --from=builder /app/smtogo .
 
-# Copy config file
-COPY smtp_config.jsonc .
-
 # Create data directory
 RUN mkdir -p data && chown -R smtogo:smtogo /app
 
@@ -50,4 +47,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
 
 # Run the application
-CMD ["./smtogo"]
+ENTRYPOINT ["./smtogo"]
