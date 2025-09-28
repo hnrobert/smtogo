@@ -8,12 +8,7 @@ on:
     paths:
       - '.github/workflows/docker-image.yml'
       - 'src/docker/Dockerfile'
-      - 'src/app/go.mod'
-      - 'src/app/go.sum'
-      - 'src/app/**/go.mod'
-      - 'src/app/**/go.sum'
-      - 'src/app/**.go'
-      - 'src/app/**/*.go'
+      - 'src/app/**/*.{go,mod,sum}'
   workflow_dispatch:
 
 permissions:
