@@ -11,7 +11,7 @@ services:
     environment:
       - GIN_MODE=release
     volumes:
-      - ./src/app/smtp_config.jsonc:/app/smtp_config.jsonc:ro
+      - ./config:/app/config
       - ./data:/app/data
     restart: unless-stopped
     healthcheck:

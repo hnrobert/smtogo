@@ -36,15 +36,13 @@ type Config struct {
 
 // Load reads configuration from file
 func Load() (*Config, error) {
-	configPaths := []string{"smtp_config.jsonc", "smtp_config.json"}
+	configPath := "config/smtp_config.jsonc"
 
-	for _, path := range configPaths {
-		if _, err := os.Stat(path); err == nil {
-			return loadFromFile(path)
-		}
+	if _, err := os.Stat(configPath); err == nil {
+		return loadFromFile(configPath)
 	}
 
-	return nil, fmt.Errorf("config file not found in paths: %v", configPaths)
+	return nil, fmt.Errorf("config file not found at: %v", configPath)
 }
 
 // loadFromFile loads configuration from a specific file
