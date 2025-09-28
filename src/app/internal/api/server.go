@@ -3,8 +3,9 @@ package api
 import (
 	"fmt"
 	"net/http"
-	"smtogo/internal/config"
-	"smtogo/internal/email"
+
+	"github.com/hnrobert/smtogo/internal/config"
+	"github.com/hnrobert/smtogo/internal/email"
 
 	"github.com/gin-gonic/gin"
 )

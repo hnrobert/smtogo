@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"smtogo/internal/api"
-	"smtogo/internal/config"
+	"github.com/hnrobert/smtogo/internal/api"
+	"github.com/hnrobert/smtogo/internal/config"
 
 	"github.com/stretchr/testify/assert"
 )

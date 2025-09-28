@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"smtogo/internal/config"
-	"smtogo/internal/models"
+	"github.com/hnrobert/smtogo/internal/config"
+	"github.com/hnrobert/smtogo/internal/models"
 
 	"gopkg.in/gomail.v2"
 )

@@ -1,7 +1,7 @@
 # SMToGo - High-Performance SMTP API Server
 
 [![Docker Build Status](https://github.com/hnrobert/smtogo/actions/workflows/docker-image.yml/badge.svg)](https://github.com/hnrobert/smtogo/actions/workflows/docker-image.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hnrobert/smtogo)](https://goreportcard.com/report/github.com/hnrobert/smtogo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hnrobert/smtogo)](https://goreportcard.com/report/github.com/hnrobert/smtogo/src/app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A high-performance SMTP API server written in Go, designed for reliable email sending.

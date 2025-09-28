@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"smtogo/internal/api"
-	"smtogo/internal/config"
+
+	"github.com/hnrobert/smtogo/internal/api"
+	"github.com/hnrobert/smtogo/internal/config"
 )
 
 func main() {

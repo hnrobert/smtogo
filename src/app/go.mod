@@ -1,4 +1,4 @@
-module smtogo
+module github.com/hnrobert/smtogo
 
 go 1.21
 
