@@ -5,6 +5,8 @@
 
 A high-performance SMTP API server written in Go, designed for reliable email sending.
 
+![logo](assets/images/logo.png)
+
 > **Note**: This version focuses on core email functionality. File attachment support has been removed to simplify deployment and reduce dependencies.
 
 ## Features
